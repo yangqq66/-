@@ -1,0 +1,172 @@
+<!DOCTYPE HTML>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>Hello APP</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css" />
+		<link rel="stylesheet" type="text/css" href="../css/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../css/swiper.css" />
+		<link rel="stylesheet" type="text/css" href="../css/leftDelete.css" />
+		<style>
+			/* 三格图 */
+			
+			.half-floor-floor {
+				background: #fff;
+				margin: 10px 0px 10px 0px;
+				box-shadow: 0 1px 1px #dcdcdc;
+				overflow: hidden;
+			}
+			
+			.half-floor {
+				width: 50%;
+				border-width: 0 1px 0 0;
+				float: left;
+				margin-left: -1px;
+				border-right: 1px solid #dadada;
+			}
+			
+			.brand-up-floor,
+			.down-floor,
+			.up-floor {
+				width: 50%;
+				float: right;
+			}
+			.up-floor {
+				margin-top: -1px;
+				border-bottom: 1px solid #dadada;
+				border-width: 0 0 1px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<!--列表容器-->
+		<ul class="aui-list-view" id='list'></ul>
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript" src="../script/swiper.js"></script>
+	<script type="text/javascript" src="../script/art-template-native.js"></script>
+	<script type="text/javascript">
+		apiready = function() {
+			initList();//初始化内容列表
+		};
+		
+		var maxbtn_num = 3;	//列按钮最大数量
+		var openSwipers = [];//滑开的列
+		
+		/**
+		 * @brief		初始化内容列表
+		 * @return			
+		 */			
+		function initList() 
+		{
+			var list_json = {};//请求获取到的json数据
+			var html = template('list_template', list_json);
+			$api.html($api.byId('list'), html);
+			//解析动态添加的元素tapmode属性，优化点击事件处理
+			api.parseTapmode();			
+			initSwiper();//初始化滑块
+		}
+		
+		/**
+		 * @brief		初始化滑动
+		 * @return			
+		 */		
+		function initSwiper()
+		{
+			for(var i = 0;i < maxbtn_num;i++)
+			{
+				var sele = ".swiper-btn-" + (i + 1); 
+				var swiper = new Swiper(sele, {
+					slidesPerView: 4,
+					slidesPerGroup: i + 1,
+					onTouchStart: function(swiper) {
+						if (openSwipers.length > 0) {
+							for(var s in openSwipers)
+							{	
+								openSwipers[s].slideTo(0, 300, false);
+								openSwipers.splice(s,1);
+							}
+						}
+					},
+					onSlideChangeStart: function(swiper) {
+						openSwipers.push(swiper);
+					}
+			   	});				
+			}
+		}
+		
+		/**
+		 * @brief		删除按钮监听事件
+		 * @param[in]	el对象	obj	被点击的按钮对象
+		 * @return			
+		 */	
+		function onDelete(obj) {
+			$api.addCls($api.closest(obj, ".swiper-container"), "dele");
+			setTimeout(function() {
+				$api.remove($api.closest(obj, ".swiper-container"));
+			}, 300)
+		}
+	</script>
+	
+	<!--模板代码-->
+	<script id="list_template" type="text/html">
+		<li class="swiper-container swiper-btn-1">
+			<div class="swiper-wrapper">
+				<div class="swiper-slide">
+					<img src="../image/262830.jpg" class="icon" />
+					<div class="text">
+						<span class="contain aui-ellipsis-3">巴黎时装周2015秋冬新款毛呢风衣巴黎时装周2015秋冬新款毛呢风衣巴黎时装周2015秋冬新款毛呢风衣巴黎时装周2015秋冬新款毛呢风衣</span>
+						<p class="fontb"><span>2015-12-11&nbsp;12:15:02</span><span>承购(2)</span><span>评论(3)</span></p>
+					</div>
+				</div>
+				<div class="swiper-slide slide-left">
+				</div>
+				<div class="swiper-slide"></div>
+				<div class="swiper-slide">
+				</div>
+				<div class="swiper-slide swipe-btn "  tapmode onclick="onDelete(this)">删除</div>
+			</div>
+		</li>
+		<li class="swiper-container swiper-btn-2">
+				<div class="swiper-wrapper">
+					<div class="swiper-slide">
+						<img src="../image/262830.jpg" class="icon" />
+						<div class="text">
+							<span class="contain aui-ellipsis-3">巴黎时装周2015秋冬新款毛呢风衣巴黎时装周2015秋冬新款毛呢风衣巴黎时装周2015秋冬新款毛呢风衣巴黎时装周2015秋冬新款毛呢风衣</span>
+							<p class="fontb"><span>2015-12-11&nbsp;12:15:02</span><span>承购(2)</span><span>评论(3)</span></p>
+						</div>
+					</div>
+					<div class="swiper-slide slide-left">
+					</div>
+					<div class="swiper-slide"></div>
+					<div class="swiper-slide">
+					</div>
+					<div class="swiper-slide swipe-btn "  tapmode onclick="onDelete(this)">删除</div>
+					<div class="swiper-slide swipe-btn aui-btn-warning"  tapmode onclick="">置顶</div>
+				</div>
+			</li>
+			<li class="swiper-container swiper-btn-3">
+				<div class="swiper-wrapper">
+					<div class="swiper-slide">
+						<img src="../image/262830.jpg" class="icon" />
+						<div class="text">
+							<span class="contain aui-ellipsis-3">巴黎时装周2015秋冬新款毛呢风衣巴黎时装周2015秋冬新款毛呢风衣巴黎时装周2015秋冬新款毛呢风衣巴黎时装周2015秋冬新款毛呢风衣</span>
+							<p class="fontb"><span>2015-12-11&nbsp;12:15:02</span><span>承购(2)</span><span>评论(3)</span></p>
+						</div>
+					</div>
+					<div class="swiper-slide slide-left">
+					</div>
+					<div class="swiper-slide"></div>
+					<div class="swiper-slide">
+					</div>
+					<div class="swiper-slide swipe-btn aui-btn-c0"  tapmode onclick="">已读</div>
+					<div class="swiper-slide swipe-btn "  tapmode onclick="onDelete(this)">删除</div>
+					<div class="swiper-slide swipe-btn aui-btn-warning"  tapmode onclick="">置顶</div>
+				</div>
+			</li>			
+	</script>	
+</html>
